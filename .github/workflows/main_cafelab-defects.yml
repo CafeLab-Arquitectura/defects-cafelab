@@ -1,0 +1,71 @@
+# Plantilla copiada de procedures-cafelab (main_cafelab-procedures.yml).
+#
+# TODO: todavia no existe el Azure App Service para defects-cafelab.
+# Cuando se cree:
+#   1. Descomentar el trigger "push" a main.
+#   2. Descomentar el job "deploy" y poner el app-name real.
+#   3. Usar los secrets que genera Azure al conectar el App Service con el repo
+#      (client-id, tenant-id, subscription-id). No reutilizar los de procedures.
+# Mientras tanto solo corre el build a mano (workflow_dispatch).
+
+name: Build and deploy JAR app to Azure Web App - cafelab-defects
+
+on:
+  # TODO: habilitar cuando exista el App Service
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java version
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'microsoft'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-app
+          path: '${{ github.workspace }}/target/*.jar'
+
+  # TODO: habilitar cuando exista el App Service
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   permissions:
+  #     id-token: write #This is required for requesting the JWT
+  #     contents: read #This is required for actions/checkout
+  #
+  #   steps:
+  #     - name: Download artifact from build job
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: java-app
+  #
+  #     - name: Login to Azure
+  #       uses: azure/login@v2
+  #       with:
+  #         client-id: ${{ secrets.TODO_AZUREAPPSERVICE_CLIENTID }}
+  #         tenant-id: ${{ secrets.TODO_AZUREAPPSERVICE_TENANTID }}
+  #         subscription-id: ${{ secrets.TODO_AZUREAPPSERVICE_SUBSCRIPTIONID }}
+  #
+  #     - name: Deploy to Azure Web App
+  #       id: deploy-to-webapp
+  #       uses: azure/webapps-deploy@v3
+  #       with:
+  #         app-name: 'TODO-nombre-del-app-service'
+  #         slot-name: 'Production'
+  #         package: '*.jar'
