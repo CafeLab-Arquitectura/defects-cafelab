@@ -24,6 +24,7 @@ Son las mismas que usa `procedures-cafelab`:
 | Variable | Requerida | Descripcion |
 | --- | --- | --- |
 | `SUPABASE_PROJECT_REF` | Si | Id del proyecto Supabase (el que aparece tras `postgres.` en el dashboard). Se usa en la URL del pooler. |
+| `DB_HOST` | No | Host del pooler de Supabase (lo que va despues de `@` en la cadena "Transaction pooler", sin el puerto). Por defecto `aws-1-us-east-2.pooler.supabase.com`. |
 | `DB_USERNAME` | Si | Usuario de la base de datos. |
 | `DB_PASSWORD` | Si | Password de la base de datos. |
 | `EUREKA_URL` | No | URL del servidor Eureka, sin `/eureka`. Por defecto `http://localhost:8761`. |
@@ -36,6 +37,7 @@ Opcionales:
 Puedes ponerlas en un archivo `.env` en la raiz del proyecto (lo lee `spring-dotenv`; `.env` esta en `.gitignore`):
 
 ```properties
+DB_HOST=aws-0-us-east-1.pooler.supabase.com
 SUPABASE_PROJECT_REF=xxxxxxxxxxxx
 DB_USERNAME=postgres.xxxxxxxxxxxx
 DB_PASSWORD=********
